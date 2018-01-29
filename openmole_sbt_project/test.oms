@@ -1,0 +1,46 @@
+val folderIn = Val[String]
+val fileIn = Val[String]
+val seed = Val[Long]
+val fileOut = Val[String]
+
+
+
+val rangeSeed = (42L to 42L) // (42L to 1042L)
+
+
+//val exploStab = ExplorationTask((seed in rangeSeed) x 
+//								(nMax in (3 to 7 by 1)) x 	
+//								(mean in List(true,false)) x
+//								(strict in List(true,false)) x
+//								(folderIn in (workDirectory / "data"))
+//								)
+val exploStab = ExplorationTask(seed in rangeSeed)
+
+val GeoTifReaderTask = ScalaTask("fr.openmole.geotools.tiff.TiffReaderTask.readGeoTiff(folderIn, fileIn)") set (
+  libraries += workDirectory / "test-mupcity-openmole-0.0.1-SNAPSHOT-shaded.jar",
+  folderIn :=  workDirectory / "data/",
+  fileIn := "test.tif",
+  inputs += (folderIn, fileIn),
+  outputs += (folderIn, fileIn)
+)
+
+
+
+
+
+
+val GeoTifWriter = ScalaTask("fr.openmole.geotools.tiff.TiffWriterTask.write(folderIn, fileIn, fileOut);") set (
+  libraries += workDirectory / "test-mupcity-openmole-0.0.1-SNAPSHOT-shaded.jar",
+  folderIn :=  workDirectory / "data/",
+  fileIn := "test.tif",
+  fileOut := "out.tif",
+  inputs += (folderIn, fileIn, fileOut),
+  outputs += (folderIn, fileIn)
+)
+
+
+//val env = EGIEnvironment(  "vo.complex-systems.eu",openMOLEMemory = 2048 megabytes)
+
+val env = LocalEnvironment(4)
+
+exploStab -< (GeoTifReaderTask  on env) -- (GeoTifWriter on env)
