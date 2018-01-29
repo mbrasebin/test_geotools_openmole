@@ -7,7 +7,7 @@
 	<description>Project to test calcul distribution with geotools on openmole</description>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<geotools.version>14.2</geotools.version>
+		<geotools.version>18.1</geotools.version>
 	</properties>
 	<build>
 		<sourceDirectory>src/main/java</sourceDirectory>
