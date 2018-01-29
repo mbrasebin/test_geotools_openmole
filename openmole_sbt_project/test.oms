@@ -17,7 +17,7 @@ val rangeSeed = (42L to 42L) // (42L to 1042L)
 val exploStab = ExplorationTask(seed in rangeSeed)
 
 val GeoTifReaderTask = ScalaTask("fr.openmole.geotools.tiff.TiffReaderTask.readGeoTiff(folderIn, fileIn)") set (
-  libraries += workDirectory / "test-mupcity-openmole-0.0.1-SNAPSHOT-shaded.jar",
+  libraries += workDirectory / "openmole-geotools-test_2.11-1.0.jar",
   folderIn :=  workDirectory / "data/",
   fileIn := "test.tif",
   inputs += (folderIn, fileIn),
@@ -30,7 +30,7 @@ val GeoTifReaderTask = ScalaTask("fr.openmole.geotools.tiff.TiffReaderTask.readG
 
 
 val GeoTifWriter = ScalaTask("fr.openmole.geotools.tiff.TiffWriterTask.write(folderIn, fileIn, fileOut);") set (
-  libraries += workDirectory / "test-mupcity-openmole-0.0.1-SNAPSHOT-shaded.jar",
+  libraries += workDirectory / "openmole-geotools-test_2.11-1.0.jar",
   folderIn :=  workDirectory / "data/",
   fileIn := "test.tif",
   fileOut := "out.tif",
