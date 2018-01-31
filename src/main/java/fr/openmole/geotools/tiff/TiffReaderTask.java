@@ -15,30 +15,25 @@ import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
 public class TiffReaderTask {
 
-	public static double readGeoTiff(String folderIn, String fileIn) throws IOException {
-
-		File file = new File(folderIn, fileIn);
-
-		return readGeoTiff(file);
-	}
-
 	public static double readGeoTiff(File file) throws IOException {
-		if (file.exists()) {
-			System.out.println("File exist : " + file.getPath());
-		} else {
-			System.out.println("File does not exist : " + file.getAbsolutePath());
-		}
-
-		GridCoverage2D coverageSet = getCoverage(file);
-		CoordinateReferenceSystem crs = coverageSet.getCoordinateReferenceSystem2D();
-		Envelope env = coverageSet.getEnvelope();
-
-		return env.getMaximum(0);
-
+	    if (file.exists()) {
+		System.out.println("File exist : " + file.getPath());
+	    } else {
+		System.out.println("File does not exist : " + file.getAbsolutePath());
+	    }
+	    
+	    GridCoverage2D coverageSet = getCoverage(file);
+	    System.out.println("coverage : " + coverageSet);
+	    CoordinateReferenceSystem crs = coverageSet.getCoordinateReferenceSystem2D();
+	    System.out.println("crs : " + crs);
+	    Envelope env = coverageSet.getEnvelope();
+	    System.out.println("env : " + env);
+	    
+	    System.out.println("env : " + env.getMinimum(0) + ", " + env.getMinimum(1) + ", " + env.getMaximum(0) + ", " + env.getMaximum(1));
+	    return env.getMaximum(0);	    
 	}
-
+    
 	public static GridCoverage2D getCoverage(File file) throws IOException {
-
 		// setting of useless parameters
 		ParameterValue<OverviewPolicy> policy = AbstractGridFormat.OVERVIEW_POLICY.createValue();
 		policy.setValue(OverviewPolicy.IGNORE);
@@ -57,5 +52,4 @@ public class TiffReaderTask {
 
 		return coverageSet;
 	}
-
 }
