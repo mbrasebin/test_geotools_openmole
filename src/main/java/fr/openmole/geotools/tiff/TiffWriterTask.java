@@ -12,6 +12,7 @@ import org.opengis.parameter.ParameterValueGroup;
 public class TiffWriterTask {
 	public static void write(File fileIn, File fileOut) {		
 		System.out.println("fileOut : " + fileOut.getAbsolutePath());
+		TiffReaderTask.initJAI();
 		try {
 			GeoTiffWriteParams wp = new GeoTiffWriteParams();
 			wp.setCompressionMode(GeoTiffWriteParams.MODE_EXPLICIT);
