@@ -1,46 +1,29 @@
-val folderIn = Val[String]
-val fileIn = Val[String]
+val fileIn = Val[File]
 val seed = Val[Long]
-val fileOut = Val[String]
-
-
+val fileOut = Val[File]
 
 val rangeSeed = (42L to 42L) // (42L to 1042L)
 
-
-//val exploStab = ExplorationTask((seed in rangeSeed) x 
-//								(nMax in (3 to 7 by 1)) x 	
-//								(mean in List(true,false)) x
-//								(strict in List(true,false)) x
-//								(folderIn in (workDirectory / "data"))
-//								)
 val exploStab = ExplorationTask(seed in rangeSeed)
 
-val GeoTifReaderTask = ScalaTask("fr.openmole.geotools.tiff.TiffReaderTask.readGeoTiff(folderIn, fileIn)") set (
+val GeoTifReaderTask = ScalaTask("fr.openmole.geotools.tiff.TiffReaderTask.readGeoTiff(fileIn)") set (
   libraries += workDirectory / "test-mupcity-openmole-0.0.1-SNAPSHOT-shaded.jar",
-  folderIn :=  workDirectory / "data/",
-  fileIn := "test.tif",
-  inputs += (folderIn, fileIn),
-  outputs += (folderIn, fileIn)
+  fileIn :=  workDirectory / "data" / "test.tif",
+  inputs += (fileIn),
+  outputs += (fileIn)
 )
 
-
-
-
-
-
-val GeoTifWriter = ScalaTask("fr.openmole.geotools.tiff.TiffWriterTask.write(folderIn, fileIn, fileOut);") set (
+val GeoTifWriter = ScalaTask("fr.openmole.geotools.tiff.TiffWriterTask.write(fileIn, fileOut);") set (
   libraries += workDirectory / "test-mupcity-openmole-0.0.1-SNAPSHOT-shaded.jar",
-  folderIn :=  workDirectory / "data/",
-  fileIn := "test.tif",
-  fileOut := "out.tif",
-  inputs += (folderIn, fileIn, fileOut),
-  outputs += (folderIn, fileIn)
+  fileIn :=  workDirectory / "data" / "test.tif",
+  fileOut :=  workDirectory / "data" / "out.tif",
+  inputs += (fileIn, fileOut),
+  outputs += (fileIn, fileOut)
 )
 
+val env = LocalEnvironment(1)
 
-//val env = EGIEnvironment(  "vo.complex-systems.eu",openMOLEMemory = 2048 megabytes)
+//GeoTifReaderTask on env
+(GeoTifReaderTask  on env) -- (GeoTifWriter on env)
 
-val env = LocalEnvironment(4)
 
-exploStab -< (GeoTifReaderTask  on env) -- (GeoTifWriter on env)
