@@ -6,14 +6,32 @@ val rangeSeed = (42L to 42L) // (42L to 1042L)
 
 val exploStab = ExplorationTask(seed in rangeSeed)
 
-val GeoTifReaderTask = ScalaTask("fr.openmole.geotools.tiff.TiffReaderTask.readGeoTiff(fileIn)") set (
+val GeoTifReaderTask = ScalaTask(
+  """
+  |import fr.openmole.geotools.tiff._
+  |withThreadClassLoader(TiffReaderTask.getClassLoader())(TiffReaderTask.readGeoTiff(fileIn))""".stripMargin
+  ) set (
   libraries += workDirectory / "test-mupcity-openmole-0.0.1-SNAPSHOT-shaded.jar",
   fileIn :=  workDirectory / "data" / "test.tif",
   inputs += (fileIn),
   outputs += (fileIn)
 )
 
-val GeoTifWriter = ScalaTask("fr.openmole.geotools.tiff.TiffWriterTask.write(fileIn, fileOut);") set (
+val GeoTifWriter = ScalaTask(
+  """
+  |import fr.openmole.geotools.tiff._
+  |withThreadClassLoader(TiffReaderTask.getClassLoader())(TiffWriterTask.write(fileIn, fileOut))""".stripMargin
+  ) set (
+  libraries += workDirectory / "test-mupcity-openmole-0.0.1-SNAPSHOT-shaded.jar",
+  fileIn :=  workDirectory / "data" / "test.tif",
+  fileOut :=  workDirectory / "data" / "out.tif",
+  inputs += (fileIn, fileOut),
+  outputs += (fileIn, fileOut)
+)
+
+val GeoTifReaderWriter = ScalaTask("""
+| fr.openmole.geotools.tiff.TiffReaderTask.readGeoTiff(fileIn)
+| fr.openmole.geotools.tiff.TiffWriterTask.write(fileIn, fileOut)""".stripMargin) set (
   libraries += workDirectory / "test-mupcity-openmole-0.0.1-SNAPSHOT-shaded.jar",
   fileIn :=  workDirectory / "data" / "test.tif",
   fileOut :=  workDirectory / "data" / "out.tif",
@@ -26,4 +44,5 @@ val env = LocalEnvironment(1)
 //GeoTifReaderTask on env
 (GeoTifReaderTask  on env) -- (GeoTifWriter on env)
 
+//(GeoTifReaderWriter on env)
 
