@@ -1,4 +1,4 @@
-# test_geotools_openmole
+# Test for GeoTools for OpenMOLE
 
 This repository is an example to embed the raster functinos from GeoTools into a OSGi bundle. This has been done in order to use models into the [OpenMOLE platform](https://www.openmole.org/).
 
